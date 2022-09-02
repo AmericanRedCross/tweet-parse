@@ -6,10 +6,34 @@ It is designed to run on a desktop within jupyter notebooks, requiring a folder 
 Because I plan to convert this to run in google cloud, for now I won't spend a lot of energy documenting things.
 
 
+## Description of folder structure needed to support execution
+
+### Wherever you choose to place the jupyter notebookds
+{root folder} 
+
+### folder where tweets are just saved to disk based on search criteria. Non-deduped
+{root folder}/twitter_data/staged_tweets/
+
+### location where, before running the consolidate_weekly_tweets, one must manually copy to.
+### this should just be automated away.
+{root folder}/twitter_data/{dateFolder}/
+
+### file that caches author information. Is it referred to and expanded by consolidate_weekly_tweets
+{root folder}/twitter_data/saved_mappings/authors.json
+
+### location where consolidated and deduped weekly files are placed
+{root folder}/twitter_data/weekly_files/
+
+### location where a pipe-delimited file is placed containing the output of all that came before. This is then manually pasted into a running
+### Excel file for final review and dispositioning.
+{root folder}/twitter_data/weekly_summaries/
+
 
 
 ## Sequence of script execution
 Daily
+
+Note the scripts all expect a .ENV file to exist with a valid API_KEY, API_KEY_SECRET, and BEARER_TOKEN env variable.
 
 1) 'GetTweetsByKeyword' -- downloads tweets meeting certain pre-established search criteria
 Weekly
