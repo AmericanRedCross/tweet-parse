@@ -2,8 +2,14 @@
 
 ## This is the current-state of tweet-parse. 
 
-It is designed to run on a desktop within jupyter notebooks, requiring a folder structure to be created to house temp files.
-Because I plan to convert this to run in google cloud, for now I won't spend a lot of energy documenting things.
+It is designed to run on a desktop within jupyter notebooks for now. This script periodically queries Twitter
+for key words, as well as the tweets of specified users, then stores the relevant results in a google sheet
+for later manual review.
+
+The inputs (query terms and users) also come from a google sheet. Those can be changed at any time if one has
+the proer permissions.
+
+The code still writes 'backup' copies of search results to local disk and will continue to do so until Q1 2023.
 
 
 ## Description of folder structure needed to support execution
@@ -30,18 +36,18 @@ Because I plan to convert this to run in google cloud, for now I won't spend a l
 
 
 
-## Sequence of script execution
-Daily
+## General Configuration Requirements
+To run this, one must have:
+1) a Twitter dev account
+2) a Google sheets account (with permissions to the relevant google sheets)
 
-Note the scripts all expect a .ENV file to exist with a valid API_KEY, API_KEY_SECRET, and BEARER_TOKEN env variable.
+The API Key and service account info must be put in a .ENV file with the following entries
 
-1) 'GetTweetsByKeyword' -- downloads tweets meeting certain pre-established search criteria
-Weekly
+		API_KEY=
+		API_KEY_SECRET=
+		BEARER_TOKEN=
+		GOOGLE_SERVICE_ACCOUNT_FILE=
 
-1) 'GetTweetsByUser' -- downloads tweets from specific pre-identified users
 
-2) Manual Step: Copy all tweets to a folder containing today's date [TODO: Make this an automated step]
+GOOGLE_SERVICE_ACCOUNT_FILE must point to a JSON file you get from google with the same basic key content
 
-3) run 'consolidate_weekly_tweets' -- searches and updates the local store of user information, does hard dedupes and writes out unique tweets to a single file. NOTE: This script can take a while because it throttles twitter requests to once every 5 seconds to stay under the 900 per 15 minute cap. [TODO: Test changing this to once every 2 seconds. 1 second should be enough but for some reason in practice this hasn't worked]
-
-4) run 'procss_weekly_tweets' -- actually this might be the new version of consolidate...
