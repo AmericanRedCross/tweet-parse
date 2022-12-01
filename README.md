@@ -2,37 +2,48 @@
 
 ## This is the current-state of tweet-parse. 
 
-It is designed to run on a desktop within jupyter notebooks for now. This script periodically queries Twitter
+It is designed to run on a desktop within jupyter notebooks, though it should be possible to just copy/paste the 
+content into a normal python file without any changes. This script periodically queries Twitter
 for key words, as well as the tweets of specified users, then stores the relevant results in a google sheet
 for later manual review.
 
 The inputs (query terms and users) also come from a google sheet. Those can be changed at any time if one has
-the proer permissions.
-
-The code still writes 'backup' copies of search results to local disk and will continue to do so until Q1 2023.
+the proper permissions.
 
 
-## Description of folder structure needed to support execution
+## High Level Design is as follows:
 
-### Wherever you choose to place the jupyter notebookds
-{root folder} 
+3 main classes
 
-### folder where tweets are just saved to disk based on search criteria. Non-deduped
-{root folder}/twitter_data/staged_tweets/
+### twitter_scanner
+An instantion of this class polls the input sheet (defined below) for the things to search for
+and periodically performs said search (periodicity hard coded in the code itself, currently set for every 10 hours)
 
-### location where, before running the consolidate_weekly_tweets, one must manually copy to.
-### this should just be automated away.
-{root folder}/twitter_data/{dateFolder}/
+### tweet_formatter
+This object performs various cleanup operations.. stripping out emojis, translates to English, removes tweets with
+duplicate urls, etc
 
-### file that caches author information. Is it referred to and expanded by consolidate_weekly_tweets
-{root folder}/twitter_data/saved_mappings/authors.json
+### tweet_screener
+This object compares the resultant list of tweets against what's already stored on google sheets and saves
+everything that is net new.
 
-### location where consolidated and deduped weekly files are placed
-{root folder}/twitter_data/weekly_files/
 
-### location where a pipe-delimited file is placed containing the output of all that came before. This is then manually pasted into a running
-### Excel file for final review and dispositioning.
-{root folder}/twitter_data/weekly_summaries/
+## Input Sheet (how you control the script)
+The input sheet is the way you control what keywords and users to search for.
+The format of the sheet is as follows:
+
+4 columns (3 required)
+record_type: put 'search_term' for keywords, or 'twitter_user' for an account name
+key_words: put any search terms if the record type is 'search_term', or a user account name if 'twitter_user'
+status: active or inactive 
+status_reason: put any contextual info you want, this has no effect on the functionality of the script.
+
+NOTE: this tab can be called whatever you want, but for now it MUST be the first sheet in the workbook.
+
+## Output Sheet (results capture)
+When the script runs, it saves tweets to a tab "staged_tweets" and author info to "twitter_authors"
+those two tabs must be the 2nd and 3rd tab respectively
+
 
 
 
