@@ -2,10 +2,8 @@
 
 ## This is the current-state of tweet-parse. 
 
-It is designed to run on a desktop within jupyter notebooks, though it should be possible to just copy/paste the 
-content into a normal python file without any changes. This script periodically queries Twitter
-for key words, as well as the tweets of specified users, then stores the relevant results in a google sheet
-for later manual review.
+This script periodically queries Twitter for key words, as well as the tweets of specified users, 
+then stores the relevant results in a google sheet for later manual review.
 
 The inputs (query terms and users) also come from a google sheet. Those can be changed at any time if one has
 the proper permissions.
